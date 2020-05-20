@@ -24,7 +24,7 @@ namespace A_WebBrowser_SO
         {
             InitializeComponent();
         }
-
+        
         private void click_irAtras(object sender, RoutedEventArgs e)
         {
             try
@@ -55,7 +55,7 @@ namespace A_WebBrowser_SO
             {
                 wb_buscador.Source = new Uri("https://" + txtb_link.Text);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 if (txtb_link.Text.Length == 0)
@@ -79,6 +79,17 @@ namespace A_WebBrowser_SO
         private void click_verAjustes(object sender, RoutedEventArgs e)
         {
 
+        }
+        private void clock_recargarPagina(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                wb_buscador.Source = wb_buscador.Source;
+            }
+            catch (Exception)
+            {
+
+            }
         }
     }
 }

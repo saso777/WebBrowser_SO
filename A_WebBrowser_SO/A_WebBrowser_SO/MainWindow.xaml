@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="1080" Width="1920">
     <Grid Width="1920" Height="1080">
-        <TabControl Margin="9,10,11,27" >
+        <TabControl Margin="10,10,10,27" >
             <TabItem Header="Inicio">
 
                 <Grid>
@@ -23,13 +23,23 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
+                            <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Content="Atras" Name="btn_atras" Click="click_irAtras"/>
-                        <Button Grid.Column="1" Content="Adelante" Name="btn_adelante" Click="click_irAdelante"/>
-                        <TextBox Grid.Column="2" Name="txtb_link" TouchEnter="click_irBuscar"/>
-                        <Button Grid.Column="3" Content="Ir" Name="btn_ir" Click="click_irBuscar"/>
-                        <Button Grid.Column="4" Content="Agr. Fav." Name="btn_agregarFavortio" Click="click_agregarFavorito"/>
-                        <Button Grid.Column="5" Content="Ajustes" Name="btn_ajustes" Click="click_verAjustes"/>
+                        <Button Grid.Column="0" Content="Pagina Anterior" Name="btn_atras" Click="click_irAtras" Margin="0,0,0,0">
+                        </Button>
+
+                        <Button Grid.Column="1" Content="Pagina Adelante" Name="btn_adelante" Click="click_irAdelante">
+                        </Button>
+                        <Button Grid.Column="2" Content="Recargar" Name ="btn_recargarPagina" Click ="clock_recargarPagina">
+                        </Button>
+                        <TextBox Grid.Column="3" Name="txtb_link" TouchEnter="click_irBuscar"/>
+                        <Button Grid.Column="4" Content="Ir" Name="btn_ir" Click="click_irBuscar">
+                            <!--<Image Source = "Archivos/Imagenes/Iconos/Botones/Barra 1/btn_irAtras1.png" Stretch="Uniform"/>-->
+                        </Button>
+                        <Button Grid.Column="5" Content="Agregar a favoritos" Name="btn_agregarFavortio" Click="click_agregarFavorito">
+                        </Button>
+                        <Button Grid.Column="6" Content="Ajustes" Name="btn_ajustes" Click="click_verAjustes">
+                        </Button>
                     </Grid>
                     <WebBrowser Name="wb_buscador" Grid.Row="1">
                         
