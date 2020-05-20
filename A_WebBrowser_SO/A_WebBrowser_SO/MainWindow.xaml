@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:A_WebBrowser_SO"
         mc:Ignorable="d"
-        Title="MainWindow" Height="400" Width="400">
-    <Grid Width="390" Height="360">
-        <TabControl Height="360" Width="380" >
+        Title="MainWindow" Height="1080" Width="1920">
+    <Grid Width="1920" Height="1080">
+        <TabControl Margin="10,10,10,10" >
             <TabItem Header="Inicio">
 
                 <Grid>
@@ -32,7 +32,7 @@
                         <Button Grid.Column="5" Content="Ajustes" Name="btn_ajustes" Click="click_verAjustes"/>
                     </Grid>
                     <WebBrowser Name="wb_buscador" Grid.Row="1">
-
+                        
                     </WebBrowser>
                 </Grid>
             </TabItem>
