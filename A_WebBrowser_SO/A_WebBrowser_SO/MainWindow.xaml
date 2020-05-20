@@ -1,0 +1,43 @@
+﻿<Window x:Class="A_WebBrowser_SO.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:A_WebBrowser_SO"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="400" Width="400">
+    <Grid Width="390" Height="360">
+        <TabControl Height="360" Width="380" >
+            <TabItem Header="Inicio">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="Atras" Name="btn_atras" Click="click_irAtras"/>
+                        <Button Grid.Column="1" Content="Adelante" Name="btn_adelante" Click="click_irAdelante"/>
+                        <TextBox Grid.Column="2" Name="txtb_link" TouchEnter="click_irBuscar"/>
+                        <Button Grid.Column="3" Content="Ir" Name="btn_ir" Click="click_irBuscar"/>
+                        <Button Grid.Column="4" Content="Agr. Fav." Name="btn_agregarFavortio" Click="click_agregarFavorito"/>
+                        <Button Grid.Column="5" Content="Ajustes" Name="btn_ajustes" Click="click_verAjustes"/>
+                    </Grid>
+                    <WebBrowser Name="wb_buscador" Grid.Row="1">
+
+                    </WebBrowser>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+
+
+</Window>
