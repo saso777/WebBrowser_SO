@@ -6,10 +6,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace A_WebBrowser_SO
+namespace Proyecto2
 {
     /// <summary>
-    /// Interaction logic for App.xaml
+    /// Lógica de interacción para App.xaml
     /// </summary>
     public partial class App : Application
     {
