@@ -39,7 +39,6 @@
             this.op_borrarHistorial = new System.Windows.Forms.ToolStripMenuItem();
             this.op_borrarCache = new System.Windows.Forms.ToolStripMenuItem();
             this.op_nuevaPestana = new System.Windows.Forms.ToolStripMenuItem();
-            this.op_agregarFavorito = new System.Windows.Forms.ToolStripMenuItem();
             this.btnIr = new System.Windows.Forms.Button();
             this.btnRecargar = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -47,6 +46,7 @@
             this.webBrowser = new System.Windows.Forms.WebBrowser();
             this.tabContenedor = new System.Windows.Forms.TabControl();
             this.btnDeleteTab = new System.Windows.Forms.Button();
+            this.op_agregarFavorito = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabContenedor.SuspendLayout();
@@ -112,14 +112,14 @@
             // ver_historial
             // 
             this.ver_historial.Name = "ver_historial";
-            this.ver_historial.Size = new System.Drawing.Size(122, 22);
+            this.ver_historial.Size = new System.Drawing.Size(180, 22);
             this.ver_historial.Text = "Historial";
             this.ver_historial.Click += new System.EventHandler(this.ver_historial_Click);
             // 
             // op_favoritos
             // 
             this.op_favoritos.Name = "op_favoritos";
-            this.op_favoritos.Size = new System.Drawing.Size(122, 22);
+            this.op_favoritos.Size = new System.Drawing.Size(180, 22);
             this.op_favoritos.Text = "Favoritos";
             this.op_favoritos.Click += new System.EventHandler(this.ver_Favoritos_Click);
             // 
@@ -135,14 +135,14 @@
             // op_borrarHistorial
             // 
             this.op_borrarHistorial.Name = "op_borrarHistorial";
-            this.op_borrarHistorial.Size = new System.Drawing.Size(151, 22);
+            this.op_borrarHistorial.Size = new System.Drawing.Size(180, 22);
             this.op_borrarHistorial.Text = "Borrar historial";
             this.op_borrarHistorial.Click += new System.EventHandler(this.op_borrarHistorial_Click);
             // 
             // op_borrarCache
             // 
             this.op_borrarCache.Name = "op_borrarCache";
-            this.op_borrarCache.Size = new System.Drawing.Size(151, 22);
+            this.op_borrarCache.Size = new System.Drawing.Size(180, 22);
             this.op_borrarCache.Text = "Borrar Caché";
             this.op_borrarCache.Click += new System.EventHandler(this.op_BorrarCache_Click);
             // 
@@ -152,13 +152,6 @@
             this.op_nuevaPestana.Size = new System.Drawing.Size(97, 20);
             this.op_nuevaPestana.Text = "Nueva pestaña";
             this.op_nuevaPestana.Click += new System.EventHandler(this.op_nuevaPestana_Click);
-            // 
-            // op_agregarFavorito
-            // 
-            this.op_agregarFavorito.Name = "op_agregarFavorito";
-            this.op_agregarFavorito.Size = new System.Drawing.Size(121, 20);
-            this.op_agregarFavorito.Text = "Agregar a Favoritos";
-            this.op_agregarFavorito.Click += new System.EventHandler(this.op_agregarFavorito_Click);
             // 
             // btnIr
             // 
@@ -240,6 +233,13 @@
             this.btnDeleteTab.Text = "Eliminar pestaña";
             this.btnDeleteTab.UseVisualStyleBackColor = true;
             this.btnDeleteTab.Click += new System.EventHandler(this.btnDeleteTab_Click);
+            // 
+            // op_agregarFavorito
+            // 
+            this.op_agregarFavorito.Name = "op_agregarFavorito";
+            this.op_agregarFavorito.Size = new System.Drawing.Size(121, 20);
+            this.op_agregarFavorito.Text = "Agregar a Favoritos";
+            this.op_agregarFavorito.Click += new System.EventHandler(this.op_agregarFavorito_Click);
             // 
             // Form1
             // 
