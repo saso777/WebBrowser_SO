@@ -15,6 +15,14 @@ namespace proyecto2
 {
     public partial class Form1 : Form
     {
+        private List<WebBrowser> navegadores = new List<WebBrowser>();//este es nada mas una lista de las ventanas que hay.
+        //tener esta lista no esta funcionando porque no cambia los web browsers por referencia...
+        private Mutex mutex = new Mutex();
+        private bool isDescargando = false;
+
+
+
+
         private WebBrowser webTab = null;
         private TabPage pestana = null;
         private List<string> historial = new List<string>();
@@ -26,6 +34,9 @@ namespace proyecto2
             webBrowser.Navigate("https://www.google.com/");
             webBrowser.DocumentCompleted += WebBrowser_DocumentCompleted; ;
             cache = new MemoryCache("Cache");
+
+
+            navegadores.Add(webBrowser);
         }
 
         private void WebBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
@@ -48,8 +59,15 @@ namespace proyecto2
             pestana.Controls.Add(webTab);
             webTab.Dock = DockStyle.Fill;
             webTab.DocumentCompleted += WebTab_DocumentCompleted;
+
+
+            navegadores.Add(webTab);
+            //webTab.FileDownload += new EventHandler(evento_SoloUnaDescarga(webTab, webTab.);
             tabContenedor.SelectedIndex = tabContenedor.TabPages.Count - 1;
+            //crearHiloDeVentana();
+
         }
+
 
         private void WebTab_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
@@ -150,18 +168,22 @@ namespace proyecto2
             TabPage tab = (TabPage)webbrowser.Parent;
             txtUrl.Text = webbrowser.Url.AbsoluteUri;
             tab.Text = webbrowser.DocumentTitle;
+            mutex.WaitOne();
             if (!historial.Contains(txtUrl.Text))
             {
                 historial.Add(webbrowser.Url.AbsoluteUri);
             }
             cache.Set(txtUrl.Text, webbrowser.DocumentStream, DateTimeOffset.Parse("11:59 PM"));
+            mutex.ReleaseMutex();
 
         }
 
         private void btnIr_Click(object sender, EventArgs e)
         {
+            mutex.WaitOne();
             WebBrowser webbrowser = tabContenedor.SelectedTab.Controls[0] as WebBrowser;
             this.cargar_pagina(webbrowser);
+            mutex.ReleaseMutex();
         }
 
         private void url_KeyPress(object sender, KeyPressEventArgs e)
@@ -235,8 +257,14 @@ namespace proyecto2
 
         private void btnDeleteTab_Click(object sender, EventArgs e)
         {
-            if(tabContenedor.SelectedTab != null)
+            if (tabContenedor.SelectedTab != null)
             {
+                //eliminar aqui el webBrowser que se encuentre en la lista(esto deb ser temporal...)
+                //navegadores[tabContenedor.SelectedIndex].Stop();
+                //navegadores[tabContenedor.SelectedIndex] = null;
+                //navegadores.Remove(navegadores[tabContenedor.SelectedIndex]);
+                //tabContenedor.SelectedTab.Controls.Clear();
+
                 tabContenedor.TabPages.Remove(tabContenedor.SelectedTab);
             }
             
@@ -245,5 +273,31 @@ namespace proyecto2
                 txtUrl.Text = "";
             }
         }
+
+        /*public void crearHiloDeVentana()//creamos el hilo que llevara 
+        {
+            Thread hilo = new Thread();
+            hventanas.Add(hilo);
+            hventanas[hventanas.Count - 1].Start();
+        }*/
+        public void agregarVentanaListaDeHilos()
+        {
+
+        }
+        public void evento_SoloUnaDescarga(object sender, CancelEventArgs e)
+        {
+            mutex.WaitOne();
+
+            isDescargando = true;
+            //hacer que la variable de que se esta descargando se haga verdadera y que cuando la descarga termiae que esta se haga false para poder permitir descargar otro archivo.
+
+            mutex.ReleaseMutex();
+        }
+
+        private void SaveFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
+
     }
 }
