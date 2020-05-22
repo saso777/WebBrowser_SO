@@ -9,6 +9,7 @@ using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace proyecto2
 {
@@ -56,7 +57,12 @@ namespace proyecto2
             pestana.Text = webTab.DocumentTitle;
             if (!webbrowser.Url.AbsoluteUri.Equals("about:blank"))
             {
-                txtUrl.Text = webTab.Url.AbsoluteUri;
+                try
+                {
+                    txtUrl.Text = webTab.Url.AbsoluteUri;
+                }
+                catch (Exception) { }
+                
             }
         }
 
@@ -106,12 +112,14 @@ namespace proyecto2
                     }
                     else
                     {
+                        
                         webbrowser.DocumentStream = (Stream)cache.Get(txtUrl.Text);
                         webbrowser.DocumentCompleted += Webbrowser_DocumentCompleted1;
+                        Mutex mutex = new Mutex();
                     }
 
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
 
                     if (txtUrl.Text.Length == 0)
@@ -227,7 +235,11 @@ namespace proyecto2
 
         private void btnDeleteTab_Click(object sender, EventArgs e)
         {
-            tabContenedor.TabPages.Remove(tabContenedor.SelectedTab);
+            if(tabContenedor.SelectedTab != null)
+            {
+                tabContenedor.TabPages.Remove(tabContenedor.SelectedTab);
+            }
+            
             if (tabContenedor.TabPages.Count < 1)
             {
                 txtUrl.Text = "";
