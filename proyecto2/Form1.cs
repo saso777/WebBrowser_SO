@@ -242,7 +242,7 @@ namespace proyecto2
         {
             if(tabContenedor.SelectedTab != null)
             {
-                if (tabContenedor.SelectedTab.Name != "historial"&& tabContenedor.SelectedTab.Name != "favoritos")
+                if (tabContenedor.SelectedTab.Name != "historial" && tabContenedor.SelectedTab.Name != "favoritos")
                 {
                     ((WebBrowser)(tabContenedor.SelectedTab.Controls[0])).Dispose();
                 }
@@ -273,7 +273,7 @@ namespace proyecto2
 
         private void descargarArchvo(object sender, EventArgs e)
         {
-            tabContenedor.Controls.Add(new TabPage("Favoritos"));
+            
 
         }
 
