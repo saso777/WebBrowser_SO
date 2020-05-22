@@ -18,6 +18,7 @@ namespace proyecto2
         private WebBrowser webTab = null;
         private TabPage pestana = null;
         private List<string> historial = new List<string>();
+        private List<String> favoritos = new List<string>();
         private MemoryCache cache;
 
         public Form1()
@@ -187,14 +188,17 @@ namespace proyecto2
         {
             if (tabContenedor.SelectedTab != null)
             {
-                WebBrowser webbrowser = tabContenedor.SelectedTab.Controls[0] as WebBrowser;
-                if (webbrowser != null)
+                if (tabContenedor.SelectedTab.Controls.Count > 0)
                 {
-                    if (webbrowser.Url != null)
+                    WebBrowser webbrowser = tabContenedor.SelectedTab.Controls[0] as WebBrowser;
+                    if (webbrowser != null)
                     {
-                        if (!webbrowser.Url.AbsoluteUri.Equals("about:blank"))
+                        if (webbrowser.Url != null)
                         {
-                            txtUrl.Text = webbrowser.Url.AbsoluteUri;
+                            if (!webbrowser.Url.AbsoluteUri.Equals("about:blank"))
+                            {
+                                txtUrl.Text = webbrowser.Url.AbsoluteUri;
+                            }
                         }
                     }
                 }
@@ -215,6 +219,7 @@ namespace proyecto2
         {
             pestana = new TabPage();
             pestana.Text = "Historial";
+            pestana.Name = "historial";
             ListView view_historial = new ListView();
             view_historial.MouseDoubleClick += View_historial_MouseDoubleClick; ;
             pestana.Controls.Add(view_historial);
@@ -237,12 +242,46 @@ namespace proyecto2
         {
             if(tabContenedor.SelectedTab != null)
             {
+                if (tabContenedor.SelectedTab.Name != "historial"&& tabContenedor.SelectedTab.Name != "favoritos")
+                {
+                    ((WebBrowser)(tabContenedor.SelectedTab.Controls[0])).Dispose();
+                }
                 tabContenedor.TabPages.Remove(tabContenedor.SelectedTab);
             }
             
             if (tabContenedor.TabPages.Count < 1)
             {
                 txtUrl.Text = "";
+            }
+        }
+
+        private void ver_Favoritos_Click(object sender, EventArgs e)
+        {
+            tabContenedor.Controls.Add(new TabPage("Favoritos"));
+            tabContenedor.SelectedTab = ((TabPage)(tabContenedor.Controls[tabContenedor.Controls.Count - 1]));
+            tabContenedor.SelectedTab.Name = "favoritos";
+
+            DataGridView dgv = new DataGridView();
+
+            tabContenedor.SelectedTab.Controls.Add(dgv);
+        }
+
+        private void op_BorrarCache_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void descargarArchvo(object sender, EventArgs e)
+        {
+            tabContenedor.Controls.Add(new TabPage("Favoritos"));
+
+        }
+
+        private void op_agregarFavorito_Click(object sender, EventArgs e)
+        {
+            if(tabContenedor.SelectedTab.Name != "historial")
+            {
+                favoritos.Add(((WebBrowser)(tabContenedor.SelectedTab.Controls[0])).Url.AbsoluteUri.ToString());
             }
         }
     }

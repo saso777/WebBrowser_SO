@@ -34,15 +34,19 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.verToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ver_historial = new System.Windows.Forms.ToolStripMenuItem();
+            this.op_favoritos = new System.Windows.Forms.ToolStripMenuItem();
             this.opcionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.op_borrarHistorial = new System.Windows.Forms.ToolStripMenuItem();
+            this.op_borrarCache = new System.Windows.Forms.ToolStripMenuItem();
             this.op_nuevaPestana = new System.Windows.Forms.ToolStripMenuItem();
             this.btnIr = new System.Windows.Forms.Button();
-            this.op_borrarHistorial = new System.Windows.Forms.ToolStripMenuItem();
             this.btnRecargar = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabContenedor = new System.Windows.Forms.TabControl();
+            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.webBrowser = new System.Windows.Forms.WebBrowser();
+            this.tabContenedor = new System.Windows.Forms.TabControl();
             this.btnDeleteTab = new System.Windows.Forms.Button();
+            this.op_agregarFavorito = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabContenedor.SuspendLayout();
@@ -50,9 +54,10 @@
             // 
             // btnAtras
             // 
-            this.btnAtras.Location = new System.Drawing.Point(12, 31);
+            this.btnAtras.Location = new System.Drawing.Point(9, 25);
+            this.btnAtras.Margin = new System.Windows.Forms.Padding(2);
             this.btnAtras.Name = "btnAtras";
-            this.btnAtras.Size = new System.Drawing.Size(31, 23);
+            this.btnAtras.Size = new System.Drawing.Size(23, 19);
             this.btnAtras.TabIndex = 0;
             this.btnAtras.Text = "<";
             this.btnAtras.UseVisualStyleBackColor = true;
@@ -60,9 +65,10 @@
             // 
             // btnAdelante
             // 
-            this.btnAdelante.Location = new System.Drawing.Point(49, 31);
+            this.btnAdelante.Location = new System.Drawing.Point(37, 25);
+            this.btnAdelante.Margin = new System.Windows.Forms.Padding(2);
             this.btnAdelante.Name = "btnAdelante";
-            this.btnAdelante.Size = new System.Drawing.Size(31, 23);
+            this.btnAdelante.Size = new System.Drawing.Size(23, 19);
             this.btnAdelante.TabIndex = 1;
             this.btnAdelante.Text = ">";
             this.btnAdelante.UseVisualStyleBackColor = true;
@@ -72,9 +78,10 @@
             // 
             this.txtUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtUrl.Location = new System.Drawing.Point(123, 32);
+            this.txtUrl.Location = new System.Drawing.Point(92, 26);
+            this.txtUrl.Margin = new System.Windows.Forms.Padding(2);
             this.txtUrl.Name = "txtUrl";
-            this.txtUrl.Size = new System.Drawing.Size(1076, 22);
+            this.txtUrl.Size = new System.Drawing.Size(808, 20);
             this.txtUrl.TabIndex = 2;
             this.txtUrl.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.url_KeyPress);
             // 
@@ -83,67 +90,87 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.verToolStripMenuItem,
-            this.opcionesToolStripMenuItem});
+            this.opcionesToolStripMenuItem,
+            this.op_nuevaPestana,
+            this.op_agregarFavorito});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1262, 28);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(946, 24);
             this.menuStrip1.TabIndex = 3;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // verToolStripMenuItem
             // 
             this.verToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ver_historial});
+            this.ver_historial,
+            this.op_favoritos});
             this.verToolStripMenuItem.Name = "verToolStripMenuItem";
-            this.verToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
+            this.verToolStripMenuItem.Size = new System.Drawing.Size(36, 20);
             this.verToolStripMenuItem.Text = "Ver";
             // 
             // ver_historial
             // 
             this.ver_historial.Name = "ver_historial";
-            this.ver_historial.Size = new System.Drawing.Size(224, 26);
+            this.ver_historial.Size = new System.Drawing.Size(180, 22);
             this.ver_historial.Text = "Historial";
             this.ver_historial.Click += new System.EventHandler(this.ver_historial_Click);
+            // 
+            // op_favoritos
+            // 
+            this.op_favoritos.Name = "op_favoritos";
+            this.op_favoritos.Size = new System.Drawing.Size(180, 22);
+            this.op_favoritos.Text = "Favoritos";
+            this.op_favoritos.Click += new System.EventHandler(this.ver_Favoritos_Click);
             // 
             // opcionesToolStripMenuItem
             // 
             this.opcionesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.op_nuevaPestana,
-            this.op_borrarHistorial});
+            this.op_borrarHistorial,
+            this.op_borrarCache});
             this.opcionesToolStripMenuItem.Name = "opcionesToolStripMenuItem";
-            this.opcionesToolStripMenuItem.Size = new System.Drawing.Size(85, 24);
+            this.opcionesToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.opcionesToolStripMenuItem.Text = "Opciones";
+            // 
+            // op_borrarHistorial
+            // 
+            this.op_borrarHistorial.Name = "op_borrarHistorial";
+            this.op_borrarHistorial.Size = new System.Drawing.Size(180, 22);
+            this.op_borrarHistorial.Text = "Borrar historial";
+            this.op_borrarHistorial.Click += new System.EventHandler(this.op_borrarHistorial_Click);
+            // 
+            // op_borrarCache
+            // 
+            this.op_borrarCache.Name = "op_borrarCache";
+            this.op_borrarCache.Size = new System.Drawing.Size(180, 22);
+            this.op_borrarCache.Text = "Borrar Caché";
+            this.op_borrarCache.Click += new System.EventHandler(this.op_BorrarCache_Click);
             // 
             // op_nuevaPestana
             // 
             this.op_nuevaPestana.Name = "op_nuevaPestana";
-            this.op_nuevaPestana.Size = new System.Drawing.Size(224, 26);
+            this.op_nuevaPestana.Size = new System.Drawing.Size(97, 20);
             this.op_nuevaPestana.Text = "Nueva pestaña";
             this.op_nuevaPestana.Click += new System.EventHandler(this.op_nuevaPestana_Click);
             // 
             // btnIr
             // 
             this.btnIr.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnIr.Location = new System.Drawing.Point(1205, 31);
+            this.btnIr.Location = new System.Drawing.Point(904, 25);
+            this.btnIr.Margin = new System.Windows.Forms.Padding(2);
             this.btnIr.Name = "btnIr";
-            this.btnIr.Size = new System.Drawing.Size(45, 24);
+            this.btnIr.Size = new System.Drawing.Size(34, 20);
             this.btnIr.TabIndex = 4;
             this.btnIr.Text = "Ir";
             this.btnIr.UseVisualStyleBackColor = true;
             this.btnIr.Click += new System.EventHandler(this.btnIr_Click);
             // 
-            // op_borrarHistorial
-            // 
-            this.op_borrarHistorial.Name = "op_borrarHistorial";
-            this.op_borrarHistorial.Size = new System.Drawing.Size(224, 26);
-            this.op_borrarHistorial.Text = "Borrar historial";
-            this.op_borrarHistorial.Click += new System.EventHandler(this.op_borrarHistorial_Click);
-            // 
             // btnRecargar
             // 
-            this.btnRecargar.Location = new System.Drawing.Point(86, 31);
+            this.btnRecargar.Location = new System.Drawing.Point(64, 25);
+            this.btnRecargar.Margin = new System.Windows.Forms.Padding(2);
             this.btnRecargar.Name = "btnRecargar";
-            this.btnRecargar.Size = new System.Drawing.Size(31, 24);
+            this.btnRecargar.Size = new System.Drawing.Size(23, 20);
             this.btnRecargar.TabIndex = 5;
             this.btnRecargar.Text = "R";
             this.btnRecargar.UseVisualStyleBackColor = true;
@@ -151,14 +178,36 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.webBrowser1);
             this.tabPage1.Controls.Add(this.webBrowser);
-            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1230, 530);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
+            this.tabPage1.Size = new System.Drawing.Size(920, 428);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Inicio";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // webBrowser1
+            // 
+            this.webBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webBrowser1.Location = new System.Drawing.Point(2, 2);
+            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser1.Name = "webBrowser1";
+            this.webBrowser1.Size = new System.Drawing.Size(916, 424);
+            this.webBrowser1.TabIndex = 1;
+            this.webBrowser1.FileDownload += new System.EventHandler(this.descargarArchvo);
+            // 
+            // webBrowser
+            // 
+            this.webBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webBrowser.Location = new System.Drawing.Point(2, 2);
+            this.webBrowser.Margin = new System.Windows.Forms.Padding(2);
+            this.webBrowser.MinimumSize = new System.Drawing.Size(15, 16);
+            this.webBrowser.Name = "webBrowser";
+            this.webBrowser.Size = new System.Drawing.Size(916, 424);
+            this.webBrowser.TabIndex = 0;
             // 
             // tabContenedor
             // 
@@ -166,37 +215,37 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabContenedor.Controls.Add(this.tabPage1);
-            this.tabContenedor.Location = new System.Drawing.Point(12, 102);
+            this.tabContenedor.Location = new System.Drawing.Point(9, 83);
+            this.tabContenedor.Margin = new System.Windows.Forms.Padding(2);
             this.tabContenedor.Name = "tabContenedor";
             this.tabContenedor.SelectedIndex = 0;
-            this.tabContenedor.Size = new System.Drawing.Size(1238, 559);
+            this.tabContenedor.Size = new System.Drawing.Size(928, 454);
             this.tabContenedor.TabIndex = 6;
             this.tabContenedor.SelectedIndexChanged += new System.EventHandler(this.chage_URL);
             // 
-            // webBrowser
-            // 
-            this.webBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webBrowser.Location = new System.Drawing.Point(3, 3);
-            this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
-            this.webBrowser.Name = "webBrowser";
-            this.webBrowser.Size = new System.Drawing.Size(1224, 524);
-            this.webBrowser.TabIndex = 0;
-            // 
             // btnDeleteTab
             // 
-            this.btnDeleteTab.Location = new System.Drawing.Point(13, 61);
+            this.btnDeleteTab.Location = new System.Drawing.Point(10, 50);
+            this.btnDeleteTab.Margin = new System.Windows.Forms.Padding(2);
             this.btnDeleteTab.Name = "btnDeleteTab";
-            this.btnDeleteTab.Size = new System.Drawing.Size(128, 35);
+            this.btnDeleteTab.Size = new System.Drawing.Size(96, 28);
             this.btnDeleteTab.TabIndex = 7;
             this.btnDeleteTab.Text = "Eliminar pestaña";
             this.btnDeleteTab.UseVisualStyleBackColor = true;
             this.btnDeleteTab.Click += new System.EventHandler(this.btnDeleteTab_Click);
             // 
+            // op_agregarFavorito
+            // 
+            this.op_agregarFavorito.Name = "op_agregarFavorito";
+            this.op_agregarFavorito.Size = new System.Drawing.Size(121, 20);
+            this.op_agregarFavorito.Text = "Agregar a Favoritos";
+            this.op_agregarFavorito.Click += new System.EventHandler(this.op_agregarFavorito_Click);
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1262, 673);
+            this.ClientSize = new System.Drawing.Size(946, 547);
             this.Controls.Add(this.btnDeleteTab);
             this.Controls.Add(this.tabContenedor);
             this.Controls.Add(this.btnRecargar);
@@ -206,6 +255,7 @@
             this.Controls.Add(this.btnAtras);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "Form1";
             this.menuStrip1.ResumeLayout(false);
@@ -226,7 +276,6 @@
         private System.Windows.Forms.ToolStripMenuItem verToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ver_historial;
         private System.Windows.Forms.ToolStripMenuItem opcionesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem op_nuevaPestana;
         private System.Windows.Forms.Button btnIr;
         private System.Windows.Forms.ToolStripMenuItem op_borrarHistorial;
         private System.Windows.Forms.Button btnRecargar;
@@ -234,6 +283,11 @@
         private System.Windows.Forms.TabControl tabContenedor;
         private System.Windows.Forms.WebBrowser webBrowser;
         private System.Windows.Forms.Button btnDeleteTab;
+        private System.Windows.Forms.ToolStripMenuItem op_favoritos;
+        private System.Windows.Forms.ToolStripMenuItem op_nuevaPestana;
+        private System.Windows.Forms.ToolStripMenuItem op_borrarCache;
+        private System.Windows.Forms.WebBrowser webBrowser1;
+        private System.Windows.Forms.ToolStripMenuItem op_agregarFavorito;
     }
 }
 
