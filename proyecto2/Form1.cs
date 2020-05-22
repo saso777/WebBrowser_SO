@@ -24,8 +24,8 @@ namespace proyecto2
         public Form1()
         {
             InitializeComponent();
-            webBrowser.Navigate("https://www.google.com/");
-            webBrowser.DocumentCompleted += WebBrowser_DocumentCompleted; ;
+            tabContenedor.Controls.Clear();
+            nuevaPestana("https://www.google.com/");
             cache = new MemoryCache("Cache");
         }
 
@@ -63,7 +63,7 @@ namespace proyecto2
                     txtUrl.Text = webTab.Url.AbsoluteUri;
                 }
                 catch (Exception) { }
-                
+
             }
         }
 
@@ -113,7 +113,7 @@ namespace proyecto2
                     }
                     else
                     {
-                        
+
                         webbrowser.DocumentStream = (Stream)cache.Get(txtUrl.Text);
                         webbrowser.DocumentCompleted += Webbrowser_DocumentCompleted1;
                         Mutex mutex = new Mutex();
@@ -139,7 +139,7 @@ namespace proyecto2
         {
             WebBrowser webbrowser = (WebBrowser)sender;
             cache.Set(txtUrl.Text, webbrowser.DocumentStream, DateTimeOffset.Parse("11:59 PM"));
-                        if (!historial.Contains(txtUrl.Text))
+            if (!historial.Contains(txtUrl.Text))
             {
                 historial.Add(webbrowser.Url.AbsoluteUri);
             }
@@ -173,15 +173,18 @@ namespace proyecto2
                 {
                     this.nuevaPestana("https://www.google.com");
                 }
-                    WebBrowser webbrowser = tabContenedor.SelectedTab.Controls[0] as WebBrowser;
-                  this.cargar_pagina(webbrowser);
+                WebBrowser webbrowser = tabContenedor.SelectedTab.Controls[0] as WebBrowser;
+                this.cargar_pagina(webbrowser);
             }
         }
 
         private void btnRecargar_Click(object sender, EventArgs e)
         {
             WebBrowser webbrowser = tabContenedor.SelectedTab.Controls[0] as WebBrowser;
-            webbrowser.Refresh();
+            if (webbrowser != null)
+            {
+                webbrowser.Refresh();
+            }
         }
 
         private void chage_URL(object sender, EventArgs e)
@@ -240,15 +243,19 @@ namespace proyecto2
 
         private void btnDeleteTab_Click(object sender, EventArgs e)
         {
-            if(tabContenedor.SelectedTab != null)
+            if (tabContenedor.SelectedTab != null)
             {
-                if (tabContenedor.SelectedTab.Name != "historial"&& tabContenedor.SelectedTab.Name != "favoritos")
+                if (tabContenedor.SelectedTab.Name != "historial" && tabContenedor.SelectedTab.Name != "favoritos")
                 {
                     ((WebBrowser)(tabContenedor.SelectedTab.Controls[0])).Dispose();
                 }
                 tabContenedor.TabPages.Remove(tabContenedor.SelectedTab);
+                if(tabContenedor.Controls.Count > 0)
+                {
+                    tabContenedor.SelectedTab = ((TabPage)(tabContenedor.Controls[tabContenedor.Controls.Count - 1]));
+                }
             }
-            
+
             if (tabContenedor.TabPages.Count < 1)
             {
                 txtUrl.Text = "";
@@ -273,13 +280,13 @@ namespace proyecto2
 
         private void descargarArchvo(object sender, EventArgs e)
         {
-            tabContenedor.Controls.Add(new TabPage("Favoritos"));
+
 
         }
 
         private void op_agregarFavorito_Click(object sender, EventArgs e)
         {
-            if(tabContenedor.SelectedTab.Name != "historial")
+            if (tabContenedor.SelectedTab.Name != "historial")
             {
                 favoritos.Add(((WebBrowser)(tabContenedor.SelectedTab.Controls[0])).Url.AbsoluteUri.ToString());
             }
