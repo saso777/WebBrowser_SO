@@ -18,7 +18,7 @@ namespace proyecto2
         private WebBrowser webTab = null;
         private TabPage pestana = null;
         private List<string> historial = new List<string>();
-        private List<String> favoritos = new List<string>();
+        private List<string> favoritos = new List<string>();
         private MemoryCache cache;
 
         public Form1()
@@ -116,7 +116,6 @@ namespace proyecto2
 
                         webbrowser.DocumentStream = (Stream)cache.Get(txtUrl.Text);
                         webbrowser.DocumentCompleted += Webbrowser_DocumentCompleted1;
-                        Mutex mutex = new Mutex();
                     }
 
                 }
