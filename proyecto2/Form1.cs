@@ -15,21 +15,54 @@ namespace proyecto2
 {
     public partial class Form1 : Form
     {
+        Mutex mutex = new Mutex();
+        List<Thread> hilos = new List<Thread>();
+        //List<WebBrowser> wbs = new List<WebBrowser>();
+        //Thread hiloGlobal;
+
         private WebBrowser webTab = null;
         private TabPage pestana = null;
         private List<string> historial = new List<string>();
-        private List<string> favoritos = new List<string>();
         private MemoryCache cache;
+
 
         public Form1()
         {
             InitializeComponent();
+            Control.CheckForIllegalCrossThreadCalls = false;
             tabContenedor.Controls.Clear();
             nuevaPestana("https://www.google.com/");
             cache = new MemoryCache("Cache");
+            //iniciarHiloGlobal();
         }
 
-        private void WebBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        /*public void iniciarHiloGlobal()
+        {
+            hiloGlobal = new Thread(revisar_ciclo);
+            hiloGlobal.Start();
+        }
+        public void revisar_ciclo()
+        {
+
+            while (this != null)
+            {
+                revisar();
+            }
+
+        }
+        public void revisar()
+        {
+            wbs.Clear();
+            for (int i = 0; i < tabContenedor.Controls.Count; i++)
+            {
+                if (tabContenedor.Controls[i].Name != "historial")
+                {
+                    wbs.Add(((WebBrowser)(tabContenedor.Controls[i].Controls[0])));
+                }
+            }
+            Thread.Sleep(100);
+        }*/
+        /*private void WebBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             TabPage tab = (TabPage)webBrowser.Parent;
             tab.Text = webBrowser.DocumentTitle;
@@ -38,7 +71,7 @@ namespace proyecto2
             {
                 historial.Add(webBrowser.Url.AbsoluteUri);
             }
-        }
+        }*/
 
         private void nuevaPestana(string url)
         {
@@ -50,8 +83,41 @@ namespace proyecto2
             webTab.Dock = DockStyle.Fill;
             webTab.DocumentCompleted += WebTab_DocumentCompleted;
             tabContenedor.SelectedIndex = tabContenedor.TabPages.Count - 1;
+
+            //iniciarHiloWebBrowser(ref pestana);
         }
 
+        /*public void iniciarHiloWebBrowser(ref TabPage tp)
+        {
+            var t = tp;
+            hilos.Add(new Thread(() => evaluador_ciclo(ref t)));
+            hilos[hilos.Count - 1].Start();
+            tp = t;
+        }
+        public void evaluador_ciclo(ref TabPage tp)
+        {
+            while (!tp.IsDisposed && tp != null)
+            {
+                evaluador(ref tp);
+                Thread.Sleep(500);
+            }
+        }
+        public void evaluador(ref TabPage tp)
+        {
+            //if (!((TabPage)wb.Parent).Text.Equals(wb.DocumentTitle))
+            txtUrl.Text = tabContenedor.Controls.IndexOf(tp).ToString();
+            //if ((tp.Text != ((WebBrowser)(tp.Controls[0])).DocumentText))
+            if(/*((tp.Controls[0]) as WebBrowser).IsBusy == (false)*/ /*true)
+            {
+                tp.Text = ((WebBrowser)(tp.Controls[0])).DocumentTitle.ToString() ;
+            }
+            else
+            {
+                tp.Text = "Cargando...";
+            }
+            
+        }
+        */
         private void WebTab_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             WebBrowser webbrowser = (WebBrowser)sender;
@@ -113,9 +179,10 @@ namespace proyecto2
                     }
                     else
                     {
-
+                        mutex.WaitOne();
                         webbrowser.DocumentStream = (Stream)cache.Get(txtUrl.Text);
                         webbrowser.DocumentCompleted += Webbrowser_DocumentCompleted1;
+                        mutex.ReleaseMutex();
                     }
 
                 }
@@ -137,11 +204,14 @@ namespace proyecto2
         private void Webbrowser_DocumentCompleted1(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             WebBrowser webbrowser = (WebBrowser)sender;
+
+            mutex.WaitOne();
             cache.Set(txtUrl.Text, webbrowser.DocumentStream, DateTimeOffset.Parse("11:59 PM"));
             if (!historial.Contains(txtUrl.Text))
             {
                 historial.Add(webbrowser.Url.AbsoluteUri);
             }
+            mutex.ReleaseMutex();
         }
 
         private void Webbrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
@@ -150,18 +220,24 @@ namespace proyecto2
             TabPage tab = (TabPage)webbrowser.Parent;
             txtUrl.Text = webbrowser.Url.AbsoluteUri;
             tab.Text = webbrowser.DocumentTitle;
+
+            mutex.WaitOne();
             if (!historial.Contains(txtUrl.Text))
             {
                 historial.Add(webbrowser.Url.AbsoluteUri);
             }
             cache.Set(txtUrl.Text, webbrowser.DocumentStream, DateTimeOffset.Parse("11:59 PM"));
+            mutex.ReleaseMutex();
 
         }
 
         private void btnIr_Click(object sender, EventArgs e)
         {
-            WebBrowser webbrowser = tabContenedor.SelectedTab.Controls[0] as WebBrowser;
-            this.cargar_pagina(webbrowser);
+            if (tabContenedor.Controls.Count > 0)
+            {
+                WebBrowser webbrowser = tabContenedor.SelectedTab.Controls[0] as WebBrowser;
+                this.cargar_pagina(webbrowser);
+            }
         }
 
         private void url_KeyPress(object sender, KeyPressEventArgs e)
@@ -172,17 +248,24 @@ namespace proyecto2
                 {
                     this.nuevaPestana("https://www.google.com");
                 }
-                WebBrowser webbrowser = tabContenedor.SelectedTab.Controls[0] as WebBrowser;
-                this.cargar_pagina(webbrowser);
+                if (tabContenedor.Controls.Count > 0)
+                {
+                    WebBrowser webbrowser = tabContenedor.SelectedTab.Controls[0] as WebBrowser;
+                    this.cargar_pagina(webbrowser);
+                }
+
             }
         }
 
         private void btnRecargar_Click(object sender, EventArgs e)
         {
-            WebBrowser webbrowser = tabContenedor.SelectedTab.Controls[0] as WebBrowser;
-            if (webbrowser != null)
+            if (tabContenedor.Controls.Count > 0)
             {
-                webbrowser.Refresh();
+                WebBrowser webbrowser = tabContenedor.SelectedTab.Controls[0] as WebBrowser;
+                if (webbrowser != null)
+                {
+                    webbrowser.Refresh();
+                }
             }
         }
 
@@ -244,12 +327,12 @@ namespace proyecto2
         {
             if (tabContenedor.SelectedTab != null)
             {
-                if (tabContenedor.SelectedTab.Name != "historial" && tabContenedor.SelectedTab.Name != "favoritos")
+                if (tabContenedor.SelectedTab.Name != "historial")
                 {
                     ((WebBrowser)(tabContenedor.SelectedTab.Controls[0])).Dispose();
                 }
                 tabContenedor.TabPages.Remove(tabContenedor.SelectedTab);
-                if(tabContenedor.Controls.Count > 0)
+                if (tabContenedor.Controls.Count > 0)
                 {
                     tabContenedor.SelectedTab = ((TabPage)(tabContenedor.Controls[tabContenedor.Controls.Count - 1]));
                 }
@@ -259,17 +342,6 @@ namespace proyecto2
             {
                 txtUrl.Text = "";
             }
-        }
-
-        private void ver_Favoritos_Click(object sender, EventArgs e)
-        {
-            tabContenedor.Controls.Add(new TabPage("Favoritos"));
-            tabContenedor.SelectedTab = ((TabPage)(tabContenedor.Controls[tabContenedor.Controls.Count - 1]));
-            tabContenedor.SelectedTab.Name = "favoritos";
-
-            DataGridView dgv = new DataGridView();
-
-            tabContenedor.SelectedTab.Controls.Add(dgv);
         }
 
         private void op_BorrarCache_Click(object sender, EventArgs e)
@@ -283,12 +355,5 @@ namespace proyecto2
 
         }
 
-        private void op_agregarFavorito_Click(object sender, EventArgs e)
-        {
-            if (tabContenedor.SelectedTab.Name != "historial")
-            {
-                favoritos.Add(((WebBrowser)(tabContenedor.SelectedTab.Controls[0])).Url.AbsoluteUri.ToString());
-            }
-        }
     }
 }
