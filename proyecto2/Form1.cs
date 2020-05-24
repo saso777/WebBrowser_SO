@@ -87,8 +87,8 @@ namespace proyecto2
 
             tabContenedor.SelectedIndex = tabContenedor.TabPages.Count - 1;
 
-            
-            
+
+
         }
 
         private void WebTab_Navigated(object sender, WebBrowserNavigatedEventArgs e)
@@ -174,7 +174,9 @@ namespace proyecto2
                 }
                 try
                 {
+                    //mutex.WaitOne();
                     tp.Text = ((WebBrowser)((object)(tp.Controls[0]))).DocumentTitle;
+                    //mutex.ReleaseMutex();
                 }
                 catch (Exception) { }
             }
