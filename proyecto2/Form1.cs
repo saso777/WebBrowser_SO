@@ -86,11 +86,14 @@ namespace proyecto2
             webTab.DocumentCompleted += WebTab_DocumentCompleted;
             webTab.Navigated += WebTab_Navigated;
 
-
-            tabContenedor.SelectedIndex = tabContenedor.TabPages.Count - 1;
-
-
-
+            //tabContenedor.SelectedIndex = tabContenedor.TabPages.Count - 1;
+            tabContenedor.SelectTab(tabContenedor.Controls.Count - 1);
+            iniciarHiloDeHilos(ref pestana);
+            /*
+            var tp = ((TabPage)(tabContenedor.Controls[tabContenedor.Controls.Count - 1]));
+            iniciarHiloDeHilos(ref tp);
+            tabContenedor.Controls.Remove((tabContenedor.Controls[tabContenedor.Controls.Count - 1]));
+            tabContenedor.Controls.Add(tp);*/
         }
 
         private void WebTab_Navigated(object sender, WebBrowserNavigatedEventArgs e)
@@ -177,7 +180,7 @@ namespace proyecto2
                 try
                 {
                     //mutex.WaitOne();
-                    tp.Text = ((WebBrowser)((object)(tp.Controls[0]))).DocumentTitle;
+                    tp.Text = ((WebBrowser)(tp.Controls[0])).DocumentTitle;
                     //mutex.ReleaseMutex();
                 }
                 catch (Exception) { }
@@ -202,9 +205,10 @@ namespace proyecto2
         private void WebTab_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             WebBrowser webbrowser = (WebBrowser)sender;
-            pestana.Text = webbrowser.DocumentTitle;
-            
-            if(webbrowser.ReadyState == WebBrowserReadyState.Complete)
+            //pestana.Text = webbrowser.DocumentTitle;
+            ((TabPage)(webbrowser.Parent)).Text = webbrowser.DocumentTitle;
+
+            if (webbrowser.ReadyState == WebBrowserReadyState.Complete)
             {
                 if (!webbrowser.Url.AbsoluteUri.Equals("about:blank"))
                 {
@@ -450,7 +454,11 @@ namespace proyecto2
             {
                 if (tabContenedor.SelectedTab.Name != "historial")
                 {
-                    ((WebBrowser)(tabContenedor.SelectedTab.Controls[0])).Dispose();
+                    try
+                    {
+                        ((WebBrowser)(tabContenedor.SelectedTab.Controls[0])).Dispose();
+                    }
+                    catch (Exception) { }
                 }
                 tabContenedor.TabPages.Remove(tabContenedor.SelectedTab);
                 if (tabContenedor.Controls.Count > 0)
