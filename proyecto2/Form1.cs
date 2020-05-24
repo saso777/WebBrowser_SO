@@ -17,7 +17,6 @@ namespace proyecto2
     {
         Mutex mutex = new Mutex();
         List<Thread> hilos = new List<Thread>();
-        //List<WebBrowser> wbs = new List<WebBrowser>();
         //Thread hiloGlobal;
 
         private WebBrowser webTab = null;
@@ -33,7 +32,8 @@ namespace proyecto2
             tabContenedor.Controls.Clear();
             nuevaPestana("https://www.google.com/");
             cache = new MemoryCache("Cache");
-            //iniciarHiloGlobal();
+
+            //iniciarHiloDeHilos();//este se ejecuta cuando es un solo hilo para todos lo procesos
         }
 
         /*public void iniciarHiloGlobal()
@@ -61,7 +61,7 @@ namespace proyecto2
                 }
             }
             Thread.Sleep(100);
-        }*/
+        }*
         /*private void WebBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             TabPage tab = (TabPage)webBrowser.Parent;
@@ -82,12 +82,70 @@ namespace proyecto2
             pestana.Controls.Add(webTab);
             webTab.Dock = DockStyle.Fill;
             webTab.DocumentCompleted += WebTab_DocumentCompleted;
+            webTab.Navigated += WebTab_Navigated;
+
+
             tabContenedor.SelectedIndex = tabContenedor.TabPages.Count - 1;
 
-            //iniciarHiloWebBrowser(ref pestana);
+            
+            
         }
 
-        /*public void iniciarHiloWebBrowser(ref TabPage tp)
+        private void WebTab_Navigated(object sender, WebBrowserNavigatedEventArgs e)
+        {
+            ((TabPage)((WebBrowser)sender).Parent).Text = "Cargando...";
+        }
+        //un solo hilo todos los procesos...
+        /*public void iniciarHiloDeHilos()
+        {
+            hilos.Add(new Thread(evaluador_ciclo));
+            hilos[hilos.Count - 1].Start();
+        }
+        public void evaluador_ciclo()
+        {
+            while (!this.IsDisposed)
+            {
+                evaluador();
+                Thread.Sleep(500);
+            }
+        }
+        public void evaluador()
+        {
+            //evaluamos que el link del txtUrl sea correspondiente a la pagina
+            //evaluamos que el nombre la tab sea igual al titulo del webBrowser...
+            if (tabContenedor.Controls.Count > 0)//si hay mas de un tab...
+            {
+                if (tabContenedor.SelectedTab.Name != "historial")//si es diferente de historial hacemos....
+                {
+                    try
+                    {
+                        txtUrl.Text = ((WebBrowser)(tabContenedor.SelectedTab.Controls[0])).Url.AbsoluteUri;
+                    }
+                    catch (Exception) { }
+                }
+                else//sino, entonces blanqueamos el txtUrl...
+                {
+                    txtUrl.Text = "";
+                }
+
+                for (int i = 0; i < tabContenedor.Controls.Count; i++) {
+                    if(tabContenedor.SelectedTab.Name != "historial")
+                    {
+                        try
+                        {
+                            ((TabPage)(tabContenedor.Controls[i])).Text = ((WebBrowser)(((TabPage)(tabContenedor.Controls[i])).Controls[0])).DocumentTitle;
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                }
+            }
+        }*/
+
+        //un hilo por procesos....
+        public void iniciarHiloDeHilos(ref TabPage tp)
         {
             var t = tp;
             hilos.Add(new Thread(() => evaluador_ciclo(ref t)));
@@ -96,7 +154,7 @@ namespace proyecto2
         }
         public void evaluador_ciclo(ref TabPage tp)
         {
-            while (!tp.IsDisposed && tp != null)
+            while (!tp.IsDisposed && !this.IsDisposed)
             {
                 evaluador(ref tp);
                 Thread.Sleep(500);
@@ -104,55 +162,89 @@ namespace proyecto2
         }
         public void evaluador(ref TabPage tp)
         {
-            //if (!((TabPage)wb.Parent).Text.Equals(wb.DocumentTitle))
-            txtUrl.Text = tabContenedor.Controls.IndexOf(tp).ToString();
-            //if ((tp.Text != ((WebBrowser)(tp.Controls[0])).DocumentText))
-            if(/*((tp.Controls[0]) as WebBrowser).IsBusy == (false)*/ /*true)
+            if(tp.Name != "historial")
             {
-                tp.Text = ((WebBrowser)(tp.Controls[0])).DocumentTitle.ToString() ;
+                if(tp == tabContenedor.SelectedTab)
+                {
+                    try
+                    {
+                        txtUrl.Text = ((WebBrowser)(tp.Controls[0])).Url.AbsoluteUri;
+                    }
+                    catch (Exception) { }
+                }
+                try
+                {
+                    tp.Text = ((WebBrowser)((object)(tp.Controls[0]))).DocumentTitle;
+                }
+                catch (Exception) { }
             }
             else
             {
-                tp.Text = "Cargando...";
+                if(tabContenedor.SelectedTab == tp)
+                {
+                    try
+                    {
+                        txtUrl.Text = "";
+                    }
+                    catch (Exception) { }
+                }
             }
-            
         }
-        */
+
+
+
+
+
         private void WebTab_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             WebBrowser webbrowser = (WebBrowser)sender;
-            pestana.Text = webTab.DocumentTitle;
-            if (!webbrowser.Url.AbsoluteUri.Equals("about:blank"))
+            pestana.Text = webbrowser.DocumentTitle;
+            
+            if(webbrowser.ReadyState == WebBrowserReadyState.Complete)
             {
-                try
+                if (!webbrowser.Url.AbsoluteUri.Equals("about:blank"))
                 {
-                    txtUrl.Text = webTab.Url.AbsoluteUri;
-                }
-                catch (Exception) { }
+                    try
+                    {
+                        txtUrl.Text = webTab.Url.AbsoluteUri;
+                    }
+                    catch (Exception) { }
 
+                }
+                txtUrl.BackColor = Color.White;
+            }
+            else
+            {
+                ((TabPage)(((WebBrowser)sender).Parent)).Text = "Cargando...";
             }
         }
 
         private void btnAtras_Click(object sender, EventArgs e)
         {
-            WebBrowser webbrowser = tabContenedor.SelectedTab.Controls[0] as WebBrowser;
-            if (webbrowser != null)
+            if(tabContenedor.Controls.Count > 0)
             {
-                if (webbrowser.CanGoBack)
+                WebBrowser webbrowser = tabContenedor.SelectedTab.Controls[0] as WebBrowser;
+                if (webbrowser != null)
                 {
-                    webbrowser.GoBack();
+                    if (webbrowser.CanGoBack)
+                    {
+                        webbrowser.GoBack();
+                    }
                 }
             }
         }
 
         private void btnAdelante_Click(object sender, EventArgs e)
         {
-            WebBrowser webbrowser = tabContenedor.SelectedTab.Controls[0] as WebBrowser;
-            if (webbrowser != null)
+            if(tabContenedor.Controls.Count > 0)
             {
-                if (webbrowser.CanGoForward)
+                WebBrowser webbrowser = tabContenedor.SelectedTab.Controls[0] as WebBrowser;
+                if (webbrowser != null)
                 {
-                    webbrowser.GoForward();
+                    if (webbrowser.CanGoForward)
+                    {
+                        webbrowser.GoForward();
+                    }
                 }
             }
 
@@ -205,29 +297,42 @@ namespace proyecto2
         {
             WebBrowser webbrowser = (WebBrowser)sender;
 
-            mutex.WaitOne();
-            cache.Set(txtUrl.Text, webbrowser.DocumentStream, DateTimeOffset.Parse("11:59 PM"));
-            if (!historial.Contains(txtUrl.Text))
+            if(webbrowser.ReadyState == WebBrowserReadyState.Complete)
             {
+                mutex.WaitOne();
+                cache.Set(txtUrl.Text, webbrowser.DocumentStream, DateTimeOffset.Parse("11:59 PM"));
+                //if (!historial.Contains(txtUrl.Text))//Descomentar esto si Sigue el error de que se agregan varias veces el mismo url al historial.........................
+                //{
+                ((TabPage)((WebBrowser)sender).Parent).Text = webbrowser.DocumentTitle;
                 historial.Add(webbrowser.Url.AbsoluteUri);
+                //}
+                mutex.ReleaseMutex();
             }
-            mutex.ReleaseMutex();
+            else
+            {
+                ((TabPage)((WebBrowser)sender).Parent).Text = "Cargando...";
+            }
         }
 
         private void Webbrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             WebBrowser webbrowser = (WebBrowser)sender;
-            TabPage tab = (TabPage)webbrowser.Parent;
             txtUrl.Text = webbrowser.Url.AbsoluteUri;
-            tab.Text = webbrowser.DocumentTitle;
-
-            mutex.WaitOne();
-            if (!historial.Contains(txtUrl.Text))
+            ((TabPage)((WebBrowser)sender).Parent).Text = webbrowser.DocumentTitle;
+            if (webbrowser.ReadyState == WebBrowserReadyState.Complete)
             {
+                mutex.WaitOne();
+                //if (!historial.Contains(txtUrl.Text))
+                //{
                 historial.Add(webbrowser.Url.AbsoluteUri);
+                //}
+                cache.Set(txtUrl.Text, webbrowser.DocumentStream, DateTimeOffset.Parse("11:59 PM"));
+                mutex.ReleaseMutex();
             }
-            cache.Set(txtUrl.Text, webbrowser.DocumentStream, DateTimeOffset.Parse("11:59 PM"));
-            mutex.ReleaseMutex();
+            else
+            {
+                ((TabPage)((WebBrowser)(sender)).Parent).Text = "Cargando...";
+            }
 
         }
 
@@ -315,6 +420,7 @@ namespace proyecto2
             }
             tabContenedor.Controls.Add(pestana);
             tabContenedor.SelectedIndex = tabContenedor.TabPages.Count - 1;
+            iniciarHiloDeHilos(ref pestana);
         }
 
         private void View_historial_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -351,7 +457,6 @@ namespace proyecto2
 
         private void descargarArchvo(object sender, EventArgs e)
         {
-
 
         }
 
