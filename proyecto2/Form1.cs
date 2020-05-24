@@ -22,7 +22,9 @@ namespace proyecto2
         private WebBrowser webTab = null;
         private TabPage pestana = null;
         private List<string> historial = new List<string>();
+        private List<string> keys = new List<string>(); //Lista donde se tendran las keys para borrar la cache 
         private MemoryCache cache;
+        private string URL; // Variable para asignar una referencia en cache al url que escriba el usuario, sea absoluto o no.
 
 
         public Form1()
@@ -32,7 +34,7 @@ namespace proyecto2
             tabContenedor.Controls.Clear();
             nuevaPestana("https://www.google.com/");
             cache = new MemoryCache("Cache");
-
+            URL = "";
             //iniciarHiloDeHilos();//este se ejecuta cuando es un solo hilo para todos lo procesos
         }
 
@@ -303,11 +305,11 @@ namespace proyecto2
             {
                 mutex.WaitOne();
                 cache.Set(txtUrl.Text, webbrowser.DocumentStream, DateTimeOffset.Parse("11:59 PM"));
-                //if (!historial.Contains(txtUrl.Text))//Descomentar esto si Sigue el error de que se agregan varias veces el mismo url al historial.........................
-                //{
+                if (!historial.Contains(txtUrl.Text))//Descomentar esto si Sigue el error de que se agregan varias veces el mismo url al historial.........................
+                {
                 ((TabPage)((WebBrowser)sender).Parent).Text = webbrowser.DocumentTitle;
-                historial.Add(webbrowser.Url.AbsoluteUri);
-                //}
+                    historial.Add(webbrowser.Url.AbsoluteUri);
+                }
                 mutex.ReleaseMutex();
             }
             else
@@ -324,11 +326,18 @@ namespace proyecto2
             if (webbrowser.ReadyState == WebBrowserReadyState.Complete)
             {
                 mutex.WaitOne();
-                //if (!historial.Contains(txtUrl.Text))
-                //{
-                historial.Add(webbrowser.Url.AbsoluteUri);
-                //}
+                if (!historial.Contains(txtUrl.Text))
+                {
+                    historial.Add(webbrowser.Url.AbsoluteUri);
+                }
                 cache.Set(txtUrl.Text, webbrowser.DocumentStream, DateTimeOffset.Parse("11:59 PM"));
+                if (!URL.Equals(txtUrl.Text))
+                {
+                    cache.Set(URL, webbrowser.DocumentStream, DateTimeOffset.Parse("11:59 PM"));
+                    keys.Add(URL);
+                }
+                keys.Add(txtUrl.Text);
+                URL = "";
                 mutex.ReleaseMutex();
             }
             else
@@ -343,6 +352,7 @@ namespace proyecto2
             if (tabContenedor.Controls.Count > 0)
             {
                 WebBrowser webbrowser = tabContenedor.SelectedTab.Controls[0] as WebBrowser;
+                URL = txtUrl.Text;
                 this.cargar_pagina(webbrowser);
             }
         }
@@ -358,6 +368,7 @@ namespace proyecto2
                 if (tabContenedor.Controls.Count > 0)
                 {
                     WebBrowser webbrowser = tabContenedor.SelectedTab.Controls[0] as WebBrowser;
+                    URL = txtUrl.Text;
                     this.cargar_pagina(webbrowser);
                 }
 
@@ -405,6 +416,7 @@ namespace proyecto2
         private void op_borrarHistorial_Click(object sender, EventArgs e)
         {
             historial.Clear();
+            MessageBox.Show("Historial eliminado.");
         }
 
         private void ver_historial_Click(object sender, EventArgs e)
@@ -416,6 +428,7 @@ namespace proyecto2
             view_historial.MouseDoubleClick += View_historial_MouseDoubleClick; ;
             pestana.Controls.Add(view_historial);
             view_historial.Dock = DockStyle.Fill;
+            view_historial.View = View.List;
             for (int i = 0; i < historial.Count; i++)
             {
                 view_historial.Items.Add(historial[i]);
@@ -454,7 +467,12 @@ namespace proyecto2
 
         private void op_BorrarCache_Click(object sender, EventArgs e)
         {
-
+            for (int i = 0; i<keys.Count; i++)
+            {
+                cache.Remove(keys[i]);
+            }
+            keys.Clear();
+            MessageBox.Show("Cache eliminada.");
         }
 
         private void descargarArchvo(object sender, EventArgs e)
