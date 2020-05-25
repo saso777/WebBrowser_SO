@@ -19,6 +19,7 @@ namespace proyecto2
         List<Thread> hilos = new List<Thread>();
         //Thread hiloGlobal;
         bool txtUrlSelected = false;
+        //bool isDescargando = false;
 
         private WebBrowser webTab = null;
         private TabPage pestana = null;
@@ -86,6 +87,7 @@ namespace proyecto2
             webTab.Dock = DockStyle.Fill;
             webTab.DocumentCompleted += WebTab_DocumentCompleted;
             webTab.Navigated += WebTab_Navigated;
+            webTab.FileDownload += descargarArchivo;
 
             //tabContenedor.SelectedIndex = tabContenedor.TabPages.Count - 1;
             tabContenedor.SelectTab(tabContenedor.Controls.Count - 1);
@@ -454,13 +456,16 @@ namespace proyecto2
 
         private void btnDeleteTab_Click(object sender, EventArgs e)
         {
+            mutex.WaitOne();
             if (tabContenedor.SelectedTab != null)
             {
                 if (tabContenedor.SelectedTab.Name != "historial")
                 {
                     try
                     {
+                        
                         ((WebBrowser)(tabContenedor.SelectedTab.Controls[0])).Dispose();
+                        
                     }
                     catch (Exception) { }
                 }
@@ -475,6 +480,7 @@ namespace proyecto2
             {
                 txtUrl.Text = "";
             }
+            mutex.ReleaseMutex();
         }
 
         private void op_BorrarCache_Click(object sender, EventArgs e)
@@ -487,14 +493,24 @@ namespace proyecto2
             MessageBox.Show("Cache eliminada.");
         }
 
-        private void descargarArchvo(object sender, EventArgs e)
+        private void descargarArchivo(object sender, EventArgs e)
         {
-
+            /*
+            btnAdelante.BackColor = Color.Aqua;
+            /*if (isDescargando)
+            {
+                ((CancelEventArgs)(((WebBrowser)sender).ActiveXInstance));
+            }
+            else
+            {
+                isDescargando = true;
+            }*/
         }
 
-        private void gotFocus(object sender, EventArgs e)
+        private void gotFocus(object sender, EventArgs e)//esto lo hice debido a que al usar el txtUrl.Focuse o ContainsFocused, no me detectaba cuando se seleccionaba o se enfocaba adecuadamente, pr esto decidi crear esa variable lastimosamente.
         {
             txtUrlSelected = true;
+            txtUrl.SelectAll();
         }
 
         private void lostFocus(object sender, EventArgs e)
