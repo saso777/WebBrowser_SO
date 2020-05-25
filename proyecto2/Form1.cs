@@ -18,6 +18,7 @@ namespace proyecto2
         Mutex mutex = new Mutex();
         List<Thread> hilos = new List<Thread>();
         //Thread hiloGlobal;
+        bool txtUrlSelected = false;
 
         private WebBrowser webTab = null;
         private TabPage pestana = null;
@@ -167,34 +168,42 @@ namespace proyecto2
         }
         public void evaluador(ref TabPage tp)
         {
-            if(tp.Name != "historial")
+            if (!txtUrlSelected)
             {
-                if(tp == tabContenedor.SelectedTab)
+                txtUrl.BackColor = Color.Aquamarine;
+                if (tp.Name != "historial")
                 {
+                    if (tp == tabContenedor.SelectedTab)
+                    {
+                        try
+                        {
+                            txtUrl.Text = ((WebBrowser)(tp.Controls[0])).Url.AbsoluteUri;
+                        }
+                        catch (Exception) { }
+                    }
                     try
                     {
-                        txtUrl.Text = ((WebBrowser)(tp.Controls[0])).Url.AbsoluteUri;
+                        //mutex.WaitOne();
+                        tp.Text = ((WebBrowser)(tp.Controls[0])).DocumentTitle;
+                        //mutex.ReleaseMutex();
                     }
                     catch (Exception) { }
                 }
-                try
+                else
                 {
-                    //mutex.WaitOne();
-                    tp.Text = ((WebBrowser)(tp.Controls[0])).DocumentTitle;
-                    //mutex.ReleaseMutex();
+                    if (tabContenedor.SelectedTab == tp)
+                    {
+                        try
+                        {
+                            txtUrl.Text = "";
+                        }
+                        catch (Exception) { }
+                    }
                 }
-                catch (Exception) { }
             }
             else
             {
-                if(tabContenedor.SelectedTab == tp)
-                {
-                    try
-                    {
-                        txtUrl.Text = "";
-                    }
-                    catch (Exception) { }
-                }
+                txtUrl.BackColor = Color.Beige;
             }
         }
 
@@ -219,7 +228,7 @@ namespace proyecto2
                     catch (Exception) { }
 
                 }
-                txtUrl.BackColor = Color.White;
+                //txtUrl.BackColor = Color.White;
             }
             else
             {
@@ -488,5 +497,14 @@ namespace proyecto2
 
         }
 
+        private void gotFocus(object sender, EventArgs e)
+        {
+            txtUrlSelected = true;
+        }
+
+        private void lostFocus(object sender, EventArgs e)
+        {
+            txtUrlSelected = false;
+        }
     }
 }

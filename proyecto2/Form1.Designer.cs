@@ -32,6 +32,8 @@
             this.btnAdelante = new System.Windows.Forms.Button();
             this.txtUrl = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.verToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ver_historial = new System.Windows.Forms.ToolStripMenuItem();
             this.opcionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.op_borrarHistorial = new System.Windows.Forms.ToolStripMenuItem();
             this.op_borrarCache = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,8 +43,6 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabContenedor = new System.Windows.Forms.TabControl();
             this.btnDeleteTab = new System.Windows.Forms.Button();
-            this.ver_historial = new System.Windows.Forms.ToolStripMenuItem();
-            this.verToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabContenedor.SuspendLayout();
             this.SuspendLayout();
@@ -78,7 +78,9 @@
             this.txtUrl.Name = "txtUrl";
             this.txtUrl.Size = new System.Drawing.Size(808, 20);
             this.txtUrl.TabIndex = 2;
+            this.txtUrl.Enter += new System.EventHandler(this.gotFocus);
             this.txtUrl.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.url_KeyPress);
+            this.txtUrl.Leave += new System.EventHandler(this.lostFocus);
             // 
             // menuStrip1
             // 
@@ -94,6 +96,21 @@
             this.menuStrip1.TabIndex = 3;
             this.menuStrip1.Text = "menuStrip1";
             // 
+            // verToolStripMenuItem
+            // 
+            this.verToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ver_historial});
+            this.verToolStripMenuItem.Name = "verToolStripMenuItem";
+            this.verToolStripMenuItem.Size = new System.Drawing.Size(36, 20);
+            this.verToolStripMenuItem.Text = "Ver";
+            // 
+            // ver_historial
+            // 
+            this.ver_historial.Name = "ver_historial";
+            this.ver_historial.Size = new System.Drawing.Size(118, 22);
+            this.ver_historial.Text = "Historial";
+            this.ver_historial.Click += new System.EventHandler(this.ver_historial_Click);
+            // 
             // opcionesToolStripMenuItem
             // 
             this.opcionesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -106,14 +123,14 @@
             // op_borrarHistorial
             // 
             this.op_borrarHistorial.Name = "op_borrarHistorial";
-            this.op_borrarHistorial.Size = new System.Drawing.Size(180, 22);
+            this.op_borrarHistorial.Size = new System.Drawing.Size(151, 22);
             this.op_borrarHistorial.Text = "Borrar historial";
             this.op_borrarHistorial.Click += new System.EventHandler(this.op_borrarHistorial_Click);
             // 
             // op_borrarCache
             // 
             this.op_borrarCache.Name = "op_borrarCache";
-            this.op_borrarCache.Size = new System.Drawing.Size(180, 22);
+            this.op_borrarCache.Size = new System.Drawing.Size(151, 22);
             this.op_borrarCache.Text = "Borrar Caché";
             this.op_borrarCache.Click += new System.EventHandler(this.op_BorrarCache_Click);
             // 
@@ -182,21 +199,6 @@
             this.btnDeleteTab.Text = "Eliminar pestaña";
             this.btnDeleteTab.UseVisualStyleBackColor = true;
             this.btnDeleteTab.Click += new System.EventHandler(this.btnDeleteTab_Click);
-            // 
-            // ver_historial
-            // 
-            this.ver_historial.Name = "ver_historial";
-            this.ver_historial.Size = new System.Drawing.Size(180, 22);
-            this.ver_historial.Text = "Historial";
-            this.ver_historial.Click += new System.EventHandler(this.ver_historial_Click);
-            // 
-            // verToolStripMenuItem
-            // 
-            this.verToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ver_historial});
-            this.verToolStripMenuItem.Name = "verToolStripMenuItem";
-            this.verToolStripMenuItem.Size = new System.Drawing.Size(36, 20);
-            this.verToolStripMenuItem.Text = "Ver";
             // 
             // Form1
             // 
