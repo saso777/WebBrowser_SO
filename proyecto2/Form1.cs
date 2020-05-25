@@ -170,7 +170,6 @@ namespace proyecto2
         {
             if (!txtUrlSelected)
             {
-                txtUrl.BackColor = Color.Aquamarine;
                 if (tp.Name != "historial")
                 {
                     if (tp == tabContenedor.SelectedTab)
@@ -200,10 +199,6 @@ namespace proyecto2
                         catch (Exception) { }
                     }
                 }
-            }
-            else
-            {
-                txtUrl.BackColor = Color.Beige;
             }
         }
 
